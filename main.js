@@ -569,6 +569,12 @@ class WebSite {
     plane.rotation.x = -Math.PI / 2;
     this.scene.add(plane);
 
+    //Sky
+    
+
+    //Background
+    // this.scene.background = new THREE.Color( 0xff0000 );
+
     this.mixers = [];
     this.previousRAF = null;
 
