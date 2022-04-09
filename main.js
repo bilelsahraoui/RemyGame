@@ -183,13 +183,25 @@ class BasicCharacterControllerInput {
       case 38: // up
         this.keys.forward = true;
         break;
+      case 90: // z
+        this.keys.forward = true;
+        break;
       case 37: // left
+        this.keys.left = true;
+        break;
+      case 81: // q
         this.keys.left = true;
         break;
       case 40: // back
         this.keys.backward = true;
         break;
+      case 83: // s
+        this.keys.backward = true;
+        break;
       case 39: // right
+        this.keys.right = true;
+        break;
+      case 68: // d
         this.keys.right = true;
         break;
       case 32: // SPACE
@@ -206,13 +218,25 @@ class BasicCharacterControllerInput {
       case 38: // up
         this.keys.forward = false;
         break;
+      case 90: // z
+        this.keys.forward = false;
+        break;
       case 37: // left
+        this.keys.left = false;
+        break;
+      case 81: // q
         this.keys.left = false;
         break;
       case 40: // back
         this.keys.backward = false;
         break;
+      case 83: // s
+        this.keys.backward = false;
+        break;
       case 39: // right
+        this.keys.right = false;
+        break;
+      case 68: // d
         this.keys.right = false;
         break;
       case 32: // SPACE
@@ -274,7 +298,6 @@ class CharacterFSM extends FiniteStateMachine {
     this.AddState('jump', DanceState);
   }
 };
-
 
 class State {
   constructor(parent) {
@@ -546,31 +569,25 @@ class WebSite {
     light.shadow.bias = -0.001;
     light.shadow.mapSize.width = 4096;
     light.shadow.mapSize.height = 4096;
-    light.shadow.camera.near = 0.1;
-    light.shadow.camera.far = 500.0;
     light.shadow.camera.near = 0.5;
     light.shadow.camera.far = 500.0;
-    light.shadow.camera.left = 50;
-    light.shadow.camera.right = -50;
-    light.shadow.camera.top = 50;
-    light.shadow.camera.bottom = -50;
+    light.shadow.camera.left = 500;
+    light.shadow.camera.right = -500;
+    light.shadow.camera.top = 500; // Distance shadow
+    light.shadow.camera.bottom = -500; // Distance shadow
     this.scene.add(light);
 
     light = new THREE.AmbientLight(0xFFFFFF, 0.25);
     this.scene.add(light);
-
     const plane = new THREE.Mesh(
-        new THREE.PlaneGeometry(100, 100, 10, 10),
-        new THREE.MeshStandardMaterial({
-            color: 0x808080,
-          }));
+      new THREE.PlaneGeometry(300, 300, 10, 10),
+      new THREE.MeshStandardMaterial({
+          color: 0x808080,
+        }));
     plane.castShadow = false;
     plane.receiveShadow = true;
     plane.rotation.x = -Math.PI / 2;
     this.scene.add(plane);
-
-    //Sky
-    
 
     //Background
     // this.scene.background = new THREE.Color( 0xff0000 );
@@ -580,6 +597,7 @@ class WebSite {
 
     this.LoadAnimatedModel();
     this.RAF();
+    
   }
 
   LoadAnimatedModel() {
