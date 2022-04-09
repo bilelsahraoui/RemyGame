@@ -589,8 +589,19 @@ class WebSite {
     plane.rotation.x = -Math.PI / 2;
     this.scene.add(plane);
 
+    const cube = new THREE.Mesh(
+      new THREE.CubeGeometry(50, 50, 50, 50),
+      new THREE.MeshStandardMaterial({
+          color: 0xff0000,
+        }));
+    cube.castShadow = false;
+    cube.receiveShadow = true;
+    this.scene.add(cube);
+
     //Background
-    // this.scene.background = new THREE.Color( 0xff0000 );
+    this.spaceTexture = new THREE.TextureLoader().load('./assets/scene/space.jpg');
+    this.scene.background = this.spaceTexture;
+    //this.scene.background = new THREE.Color( 0xff0000 );
 
     this.mixers = [];
     this.previousRAF = null;
