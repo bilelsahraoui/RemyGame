@@ -573,24 +573,6 @@ class RigidBody {
     Ammo.destroy(btSize);
   }
 
-  createSphere(mass, pos, size) {
-    this.transform = new Ammo.btTransform();
-    this.transform.setIdentity();
-    this.transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
-    this.transform.setRotation(new Ammo.btQuaternion(0, 0, 0, 1));
-    this.motionState = new Ammo.btDefaultMotionState(this.transform);
-
-    this.shape = new Ammo.btSphereShape(size);
-    this.shape.setMargin(0.05);
-
-    this.inertia = new Ammo.btVector3(0, 0, 0);
-    if(mass > 0) {
-      this.shape.calculateLocalInertia(mass, this.inertia);
-    }
-
-    this.info = new Ammo.btRigidBodyConstructionInfo(mass, this.motionState, this.shape, this.inertia);
-    this.body = new Ammo.btRigidBody(this.info);
-  }
 }
 
 
@@ -672,22 +654,39 @@ class WebSite {
     this.physicsWorld.addRigidBody(rbground.body);
 
       //Box
-    const box = new THREE.Mesh(
+    const pbox = new THREE.Mesh(
     new THREE.BoxGeometry(4, 4, 4),
-    new THREE.MeshStandardMaterial({color: 0x808080}));
-    box.position.set(10, 150, 10);
-    box.castShadow = true;
-    box.receiveShadow = true;
-    this.scene.add(box);
+    new THREE.MeshStandardMaterial({color: 0xff0000}));
+    pbox.position.set(10, 190, 10);
+    pbox.castShadow = true;
+    pbox.receiveShadow = true;
+    this.scene.add(pbox);
       
-    const rbBox = new RigidBody();
-    rbBox.createBox(1, box.position, box.quaternion, new THREE.Vector3(4, 4, 4));
-    rbBox.setRestitution(0.25);
-    rbBox.setFriction(1);
-    rbBox.setRollingFriction(5);
-    this.physicsWorld.addRigidBody(rbBox.body);
+    const rpBox = new RigidBody();
+    rpBox.createBox(10, pbox.position, pbox.quaternion, new THREE.Vector3(4, 4, 4));
+    rpBox.setRestitution(0.25);
+    rpBox.setFriction(1);
+    rpBox.setRollingFriction(5);
+    this.physicsWorld.addRigidBody(rpBox.body);
           
-    this.rigidBodies.push({mesh: box, rigidBody: rbBox});
+    this.rigidBodies.push({mesh: pbox, rigidBody: rpBox});
+
+    const box = new THREE.Mesh(
+      new THREE.BoxGeometry(10, 30, 10),
+      new THREE.MeshStandardMaterial({color: 0x220000}));
+      box.position.set(10, 160, 10);
+      box.castShadow = true;
+      box.receiveShadow = true;
+      this.scene.add(box);
+        
+      const rbBox = new RigidBody();
+      rbBox.createBox(10, box.position, box.quaternion, new THREE.Vector3(4, 4, 4));
+      rbBox.setRestitution(0.25);
+      rbBox.setFriction(1);
+      rbBox.setRollingFriction(5);
+      this.physicsWorld.addRigidBody(rbBox.body);
+            
+      this.rigidBodies.push({mesh: box, rigidBody: rbBox});
 
       //Player
     // const player = new RigidBody();
@@ -720,22 +719,22 @@ class WebSite {
     
     this.controls = new BasicCharacterController(params);
 
-      this.playerBox = new THREE.Mesh(
-      new THREE.BoxGeometry(10, 30, 10),
-      new THREE.MeshStandardMaterial({color: 0xff0000}));
-      this.playerBox.position.set(10, 0, 10);
-      this.playerBox.castShadow = true;
-      this.playerBox.receiveShadow = true;
-      this.scene.add(this.playerBox);
+      // this.playerBox = new THREE.Mesh(
+      // new THREE.BoxGeometry(10, 30, 10),
+      // new THREE.MeshStandardMaterial({color: 0xff0000}));
+      // this.playerBox.position.set(10, 0, 10);
+      // this.playerBox.castShadow = true;
+      // this.playerBox.receiveShadow = true;
+      // this.scene.add(this.playerBox);
         
-      this.rbPlayer = new RigidBody();
-      this.rbPlayer.createBox(1, this.controls.position, new THREE.Quaternion(), new THREE.Vector3(4, 4, 4));
-      this.rbPlayer.setRestitution(0.25);
-      this.rbPlayer.setFriction(1);
-      this.rbPlayer.setRollingFriction(5);
-      this.physicsWorld.addRigidBody(this.rbPlayer.body);
+      // this.rbPlayer = new RigidBody();
+      // this.rbPlayer.createBox(1, this.playerBox.position, this.playerBox.quaternion, new THREE.Vector3(4, 4, 4));
+      // this.rbPlayer.setRestitution(0.25);
+      // this.rbPlayer.setFriction(1);
+      // this.rbPlayer.setRollingFriction(5);
+      // this.physicsWorld.addRigidBody(this.rbPlayer.body);
             
-      this.rigidBodies.push({mesh: this.playerBox, rigidBody: this.rbPlayer});
+      // this.rigidBodies.push({mesh: this.playerBox, rigidBody: this.rbPlayer});
 
     this.thirdPersonCamera = new ThirdPersonCamera({
       camera: this.camera,
@@ -757,7 +756,7 @@ class WebSite {
 
       this.RAF();
 
-      this.playerBox.position.set(this.controls.position.x, this.controls.position.y, this.controls.position.z);
+      // this.playerBox.position.set(this.controls.position.x, this.controls.position.y, this.controls.position.z);
       this.threejs.render(this.scene, this.camera);
       this.Step(t - this.previousRAF);
       this.previousRAF = t;
@@ -765,33 +764,33 @@ class WebSite {
   }
 
   spawn() {
-    // const scale = Math.random() * 4 + 4;
-    // const box = new THREE.Mesh(
-    //   new THREE.BoxGeometry(scale, scale, scale),
-    //   new THREE.MeshStandardMaterial({
-    //       color: 0x808080,
-    //   }));
-    // box.position.set(Math.random() * 2 - 1, 200.0, Math.random() * 2 - 1);
-    // box.quaternion.set(0, 0, 0, 1);
-    // box.castShadow = true;
-    // box.receiveShadow = true;
+    const scale = Math.random() * 4 + 4;
+    const box = new THREE.Mesh(
+      new THREE.BoxGeometry(scale, scale, scale),
+      new THREE.MeshStandardMaterial({
+          color: 0x808080,
+      }));
+    box.position.set(Math.random() * 2 - 1, 200.0, Math.random() * 2 - 1);
+    box.quaternion.set(0, 0, 0, 1);
+    box.castShadow = true;
+    box.receiveShadow = true;
 
-    // const rb = new RigidBody();
-    // rb.createBox(10, box.position, box.quaternion, new THREE.Vector3(scale, scale, scale), null);
-    // rb.setRestitution(0.125);
-    // rb.setFriction(1);
-    // rb.setRollingFriction(5);
+    const rb = new RigidBody();
+    rb.createBox(10, box.position, box.quaternion, new THREE.Vector3(scale, scale, scale), null);
+    rb.setRestitution(0.125);
+    rb.setFriction(1);
+    rb.setRollingFriction(5);
 
-    // this.physicsWorld.addRigidBody(rb.body);
+    this.physicsWorld.addRigidBody(rb.body);
 
-    // this.rigidBodies.push({mesh: box, rigidBody: rb});
+    this.rigidBodies.push({mesh: box, rigidBody: rb});
 
-    // const playerBody = new THREE.Mesh(
-    //   new THREE.BoxGeometry(13, 75, 20),
-    //   new THREE.MeshStandardMaterial({color: 0xff0000}));
-    //   this.scene.add(playerBody);
+    const playerBody = new THREE.Mesh(
+      new THREE.BoxGeometry(13, 75, 20),
+      new THREE.MeshStandardMaterial({color: 0xff0000}));
+      this.scene.add(playerBody);
 
-    // this.scene.add(box);
+    this.scene.add(box);
   }
 
 
