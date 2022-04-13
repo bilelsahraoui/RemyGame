@@ -647,7 +647,6 @@ class WebSite {
     ground.receiveShadow = true;
     this.scene.add(ground);
 
-
     const rbground = new RigidBody();
     rbground.createBox(0, ground.position, ground.quaternion, new THREE.Vector3(100, 1, 100));
     rbground.setRestitution(0.99);
@@ -671,6 +670,9 @@ class WebSite {
           
     this.rigidBodies.push({mesh: pbox, rigidBody: rpBox});
 
+    for (let i = 0; i < 100; ++i) {
+
+
     const box = new THREE.Mesh(
       new THREE.BoxGeometry(10, 30, 10),
       new THREE.MeshStandardMaterial({color: 0x220000}));
@@ -687,7 +689,7 @@ class WebSite {
       this.physicsWorld.addRigidBody(rbBox.body);
             
       this.rigidBodies.push({mesh: box, rigidBody: rbBox});
-
+    }
       //Player
     // const player = new RigidBody();
     // player.createBox(1, this.target.position, new THREE.Quaternion(), new THREE.Vector3(100, 1, 100));
